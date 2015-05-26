@@ -1,0 +1,165 @@
+/**
+ * Hyperspectral Imaging Algorithms Library
+ *
+ * @file
+ * @brief Library of common functions to implement algorithms for analyzing hyperspectral images
+ * 
+ * @author Raquel Lazcano
+ * @author Daniel Madroñal
+ * @version 1.0
+ * @date July 2014
+ */
+
+
+package hsi_analysis;
+
+
+unit hsi_analysis:
+	uint(size=32) MAX = 10000;
+	uint(size=32) rowsMax = 4096;
+	uint(size=32) columnsMax = 4096;
+	uint(size=32) bandsMax = 4096;
+
+	/*File reading and writing */
+		
+	@native procedure gen_conf_data(int(size=32) rows, int(size=32) columns, int(size=32) bands, int(size=32) nbits, int(size=32) nformat, int(size=32) numPC,int(size=32) numEnd)
+	end
+	
+	@native procedure write_short_binary(int(size=16) matrixOut[MAX][MAX], int(size = 32) rc, int(size = 32) bands, String fileName) 
+	end
+	
+	@native procedure write_double_binary(double matrixOut[MAX][MAX], int(size = 32) rc, int(size = 32) bands, String fileName) 
+	end
+	
+	@native procedure gen_hdr(double matrixOut[MAX][MAX], int(size=32) rows, int(size=32) columns, int(size=32) lines, int(size=32) samples, int(size=32) bands, int(size=32) numEnd, String path, String fileName, int(size=32) typeFile)
+	end
+	
+	@native procedure read_txt(double matrixIn[MAX][MAX], int(size = 32) rows, int(size = 32) columns, String fileName)
+	end
+
+	@native procedure write_txt(double matrixOut[MAX][MAX], int(size = 32) rows, int(size = 32) columns, String fileName)
+	end	
+	
+	/*Algorithmics */
+	
+	@native function mean_vector(double vector[MAX], int(size = 32) positions) --> double
+	end
+	
+	@native procedure vector_minus_value(double vectorIn[MAX], double value, double vectorMinus[MAX], int(size=32) positions)
+	end
+	
+	@native procedure transpose(double matrixIn[MAX][MAX], double matrixTranspose[MAX][MAX], double rows, double columns)
+	end
+
+	@native function vector_mult(double vector1[columnsMax], double vector2[rowsMax], int(size=32) positions) --> double
+	end
+
+	@native procedure matrix_mult(double matrix1[MAX][MAX], double matrix2[MAX][MAX], double matrixResult[MAX][MAX], double rows1, double columns1, double rows2, double columns2)
+	end
+	
+	@native procedure get_diagonal(double matrix[MAX][MAX], double vectorDiag[MAX], int(size=32) positions)
+	end
+	
+	@native procedure get_eigenvectMatrix(double matrixIn[MAX][MAX],double matrixEigenvectors[MAX][MAX], int(size=32) rows, int(size=32) columns)
+	end
+
+	@native procedure matrix_reduce(double matrix1[MAX][MAX], double matrix2[MAX][MAX], double rows1, double columns1, double rows2, double columns2)
+	end
+	
+	@native function log(double value) --> double
+	end
+	
+	@native procedure matrix_scale(double matrixIn[MAX][MAX], double matrixOut[MAX][MAX], double value, int(size = 32) rows, int(size = 32) columns)
+	end
+
+	@native function elev(double base, double power) --> double
+	end
+
+	@native function maxSqrtSum(double matrix[MAX][MAX], double rows, double columns) --> double
+	end
+
+	@native procedure matrix_extend(double matrixIn[MAX][MAX], double matrixOut[MAX][MAX], double rows1, double columns1, double rows2, double columns2)
+	end
+
+	@native procedure matrix_fill_column(double matrixIn[MAX][MAX], double rows1, double columns1, double column, double value)
+	end
+
+	@native function double_to_int(double value) --> int(size = 32)
+	end
+	
+	@native function int_to_double(int(size = 32) value) --> double
+	end
+
+	@native procedure random_vector(double vector[MAX], double positions)
+	end
+	
+	@native procedure get_pinverse(double matrixIn[MAX][MAX],double matrix_p_inverse[MAX][MAX], int(size=32) rows, int(size=32) columns)
+	end
+	
+	@native procedure vector_minus_vector(double vector1[MAX], double vector2[MAX], double vectorResult[MAX], int(size=32) positions)
+	end
+	
+	@native function sq_root(double value) --> double
+	end
+	
+	@native function getIndexMax(double vector[MAX], int(size = 32) positions) --> int(size=32)
+	end
+
+	@native function rem(double dividend, int(size=32) divisor) --> int(size = 32)
+	end
+	
+	@native procedure get_inverse(double matrixIn[MAX][MAX], double matrix_inverse[MAX][MAX], int(size=32) rows, int(size=32) columns)
+	end
+	
+	@native procedure matrix_mult_vector(double matrix1[MAX][MAX], double vector[MAX], double vectorResult[MAX], double rows1, double columns1, double positions_vector)
+	end
+	
+	@native procedure vector_scale(double vectorIn[MAX], double vectorOut[MAX], double value, int(size = 32) positions)
+	end
+	
+	@native function double_to_float(double value) --> float
+	end
+	
+	@native function float_to_double(float value) --> double
+	end
+	
+	@native procedure matrix_get_column(double matrix1[MAX][MAX], double vector[MAX], double rows1, double columns1, double column)
+	end
+	
+	@native procedure matrix_set_column(double matrix1[MAX][MAX], double vector[MAX], double rows1, double columns1, double column)
+	end
+	
+	@native procedure matrix_get_row(double matrix1[MAX][MAX], double vector[MAX], int rows1, int columns1, int row)
+	end
+	
+	@native procedure matrix_set_row(double matrix1[MAX][MAX], double vector[MAX], double rows1, double columns1, double row)
+	end
+	
+	@native procedure matrix_plus_value(double matrixIN[MAX][MAX], double matrixOut[MAX][MAX], double value, int rows, int columns)
+	end
+	
+	@native procedure matrix_minus_matrix(double matrix1[MAX][MAX], double matrix2[MAX][MAX], double matrixOut[MAX][MAX], int rows, int columns)
+	end
+	
+	@native procedure vector_mult_matrix(double vector[MAX], double matrix1[MAX][MAX], double vectorResult[MAX], double positions_vector, double rows1, double columns1)
+	end
+	
+	@native procedure matrix_minus_value(double matrixIN[MAX][MAX], double matrixOut[MAX][MAX], double value, int rows, int columns)
+	end
+	
+	@native procedure matrix_plus_matrix(double matrix1[MAX][MAX], double matrix2[MAX][MAX], double matrixOut[MAX][MAX], int rows, int columns)
+	end
+	
+	@native function get_time() --> double
+	end
+
+	@native procedure end_program()
+	end
+	
+	@native procedure modify_config(int(size=32) num_PC, int(size=32) num_Endmembers, String path, String var1, String var2)
+	end
+	
+end
+
+
+

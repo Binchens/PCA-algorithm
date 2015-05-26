@@ -1,0 +1,26 @@
+package hsi_analysis;
+ 
+ 
+unit Data:
+ 
+ 
+int(size=32) rows = 100;
+int(size=32) columns = 100;
+int(size=32) bands = 221;
+int(size=32) ncores = 4;						// Number of cores
+int(size=32) bands4core = bands/ncores;			// Bands per each core
+int(size=32) band4core0 = 0;					// First band for core 0 (bands4core*0)
+int(size=32) band4core1 = bands4core;			// First band for core 1 (bands4core*1)
+int(size=32) band4core2 = (bands4core*2);		// First band for core 2
+int(size=32) band4core3 = (bands4core*3);		// First band for core 3
+int(size=32) nbits = 16;
+int(size=32) nformat = 0;  						// 0 BSQ, 1 BIP, 2 BIL
+ 
+int(size=32) num_PC = 25;
+double num_Endmembers = 20;
+ 
+int(size=32) rc = rows*columns;
+int(size=32) int_Endmembers = 20;
+ 
+ 
+end

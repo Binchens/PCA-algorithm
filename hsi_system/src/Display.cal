@@ -1,0 +1,31 @@
+import  hsi_analysis.Data.*;
+import  hsi_analysis.hsi_analysis.*;
+
+
+actor Display() float stream ==> :
+
+	int received := 0;
+	float array_rec[num_PC];
+	double image_ABUND[num_Endmembers][rc];
+
+receive_abundances: action stream: [token] repeat num_Endmembers ==> 	 
+  		 
+	guard
+		received < rc
+	do
+	 	array_rec := token;
+	 	foreach int(size= 32)m in 0 .. ((num_Endmembers)-1) do
+			image_ABUND[m][received] := float_to_double(array_rec[m]);
+		end
+
+	 	received := received + 1;
+		if (received = rc) then
+		//	println("Generación de abundancias");
+			gen_hdr(image_ABUND,int_Endmembers, rc, rows,columns, num_PC, int_Endmembers, "/home/rlazcano/Dropbox/PFG-GDEM/workspace_ultimo/HSI_SYSTEM/compiled/bin/abund", "abund", 3);
+			println("Display: done");
+			println("FIN PROCESAMIENTO");
+			end_program();
+		end
+	end
+
+end

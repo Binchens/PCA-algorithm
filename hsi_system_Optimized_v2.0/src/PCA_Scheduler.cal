@@ -1,0 +1,81 @@
+
+import hsi_analysis.Data.*;
+import hsi_analysis.hsi_analysis.*;
+
+
+actor PCA_Scheduler()float scheduler_in, bool EOF ==> float PCA_Secondary_0, float PCA_Secondary_1, float PCA_Secondary_2, float PCA_Secondary_3, double Sche_Pointer:
+	
+	bool sche_ready := false;
+	
+	
+	int received := 0;
+	int token_sent := 0;
+	
+	float image_IN[rc][bands];
+	float array_rec[bands];
+	float averageVector[rc];
+	float Sche_out_0[rc];
+	float Sche_out_1[rc];
+	float Sche_out_2[rc];
+	float Sche_out_3[rc];
+	
+	double pointer := 0;
+	double tINI;
+	double tEND;
+	double tDIFF;
+	
+	// Scheduler's input receive and store the information for all bands per each pixel
+	receive_data: action scheduler_in: [token] repeat bands, EOF: [endOfFile] ==>
+  		 
+	guard
+		received < (rc)	and endOfFile = false
+	do
+		
+	 	array_rec := token;
+	 	foreach int(size=32)m in 0 .. ((bands)-1) do
+			image_IN[received][m] := array_rec[m];
+		end
+	 	received := received + 1;
+		
+	end
+
+	// Scheduler makes data package for the cores and send it to all of them
+	send_sche: action ==> PCA_Secondary_0: [Sche_out_0]repeat rc, PCA_Secondary_1: [Sche_out_1]repeat rc, PCA_Secondary_2: [Sche_out_2]repeat rc, PCA_Secondary_3: [Sche_out_3]repeat rc, Sche_Pointer: [pointer]
+	
+	guard
+		 token_sent >= bands and sche_ready = false
+	do
+	 	println("****Inicio Scheduler PCA****");
+		tINI := get_time();
+	 	foreach int(size=32) i in band4core0 .. (band4core1-1) do
+	 		matrix_get_column_float(image_IN, averageVector, rc, bands, i);
+	 		Sche_out_0 := averageVector;
+	 		pointer := token_sent;
+	 		token_sent := token_sent + 1;
+	 	end
+	 	foreach int(size=32) j in band4core1 .. (band4core2-1) do
+	 		matrix_get_column_float(image_IN, averageVector, rc, bands, j);
+	 		Sche_out_1 := averageVector;
+	 		pointer := token_sent;
+	 		token_sent := token_sent + 1;
+	 	end
+	 	foreach int(size=32) k in band4core2 .. (band4core3-1) do
+	 		matrix_get_column_float(image_IN, averageVector, rc, bands, k);
+	 		Sche_out_2 := averageVector;
+	 		pointer := token_sent;
+	 		token_sent := token_sent + 1;
+	 	end
+	 	foreach int(size=32) l in band4core3 .. (bands-1) do
+	 		matrix_get_column_float(image_IN, averageVector, rc, bands, l);
+	 		Sche_out_3 := averageVector;
+	 		pointer := token_sent;
+	 		token_sent := token_sent + 1;
+		end
+		sche_ready := true;
+		
+		tEND := get_time();
+		tDIFF := tEND - tINI;
+		println("El tiempo Scheduler PCA es: " + tDIFF);
+		println("****Fin Scheduler PCA****");
+	end
+end

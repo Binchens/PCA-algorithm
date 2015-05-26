@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<XDF name="hsi_system">
+    <Instance id="VCA">
+        <Class name="VCA"/>
+    </Instance>
+    <Instance id="LSU">
+        <Class name="LSU"/>
+    </Instance>
+    <Instance id="Source">
+        <Class name="Source"/>
+    </Instance>
+    <Instance id="Display">
+        <Class name="Display"/>
+    </Instance>
+    <Instance id="Secondary_PCA_0">
+        <Class name="PCA_Secondary_1"/>
+    </Instance>
+    <Instance id="Secondary_PCA_1">
+        <Class name="PCA_Secondary_1"/>
+    </Instance>
+    <Instance id="Secondary_PCA_2">
+        <Class name="PCA_Secondary_1"/>
+    </Instance>
+    <Instance id="Secondary_PCA_3">
+        <Class name="PCA_Secondary_1"/>
+    </Instance>
+    <Instance id="Scheduler_PCA">
+        <Class name="PCA_Scheduler"/>
+    </Instance>
+    <Instance id="Constructor_PCA">
+        <Class name="Matrix_Constructor"/>
+    </Instance>
+    <Connection dst="LSU" dst-port="LSU_in" src="VCA" src-port="VCA_out"/>
+    <Connection dst="Display" dst-port="stream" src="LSU" src-port="LSU_out"/>
+    <Connection dst="Scheduler_PCA" dst-port="EOF" src="Source" src-port="EOF"/>
+    <Connection dst="VCA" dst-port="VCA_in" src="Constructor_PCA" src-port="PCA_Constructor_out"/>
+    <Connection dst="Constructor_PCA" dst-port="Sec_Pointer0"
+        src="Secondary_PCA_0" src-port="Sec_Pointer"/>
+    <Connection dst="Constructor_PCA" dst-port="Sec_Pointer1"
+        src="Secondary_PCA_1" src-port="Sec_Pointer"/>
+    <Connection dst="Constructor_PCA" dst-port="Sec_Pointer2"
+        src="Secondary_PCA_2" src-port="Sec_Pointer"/>
+    <Connection dst="Constructor_PCA" dst-port="Sec_Pointer3"
+        src="Secondary_PCA_3" src-port="Sec_Pointer"/>
+    <Connection dst="Constructor_PCA" dst-port="PCA_in" src="Source" src-port="Stream"/>
+    <Connection dst="Constructor_PCA" dst-port="EOF" src="Source" src-port="EOF"/>
+    <Connection dst="Secondary_PCA_0" dst-port="PCA_Secondary_in"
+        src="Scheduler_PCA" src-port="Secondary_Out0"/>
+    <Connection dst="Secondary_PCA_1" dst-port="PCA_Secondary_in"
+        src="Scheduler_PCA" src-port="Secondary_Out1"/>
+    <Connection dst="Secondary_PCA_2" dst-port="PCA_Secondary_in"
+        src="Scheduler_PCA" src-port="Secondary_Out2"/>
+    <Connection dst="Secondary_PCA_0" dst-port="Sche_Pointer"
+        src="Scheduler_PCA" src-port="Sche_Pointer0"/>
+    <Connection dst="Secondary_PCA_1" dst-port="Sche_Pointer"
+        src="Scheduler_PCA" src-port="Sche_Pointer1"/>
+    <Connection dst="Secondary_PCA_2" dst-port="Sche_Pointer"
+        src="Scheduler_PCA" src-port="Sche_Pointer2"/>
+    <Connection dst="Secondary_PCA_3" dst-port="Sche_Pointer"
+        src="Scheduler_PCA" src-port="Sche_Pointer3"/>
+    <Connection dst="Secondary_PCA_3" dst-port="PCA_Secondary_in"
+        src="Scheduler_PCA" src-port="Secondary_Out3"/>
+    <Connection dst="Constructor_PCA" dst-port="Constructor_in0"
+        src="Secondary_PCA_0" src-port="PCA_Secondary_out"/>
+    <Connection dst="Constructor_PCA" dst-port="Constructor_in1"
+        src="Secondary_PCA_1" src-port="PCA_Secondary_out"/>
+    <Connection dst="Constructor_PCA" dst-port="Constructor_in2"
+        src="Secondary_PCA_2" src-port="PCA_Secondary_out"/>
+    <Connection dst="Constructor_PCA" dst-port="Constructor_in3"
+        src="Secondary_PCA_3" src-port="PCA_Secondary_out"/>
+    <Connection dst="LSU" dst-port="pixels" src="Constructor_PCA" src-port="PCA_Constructor_out"/>
+    <Connection dst="Scheduler_PCA" dst-port="Scheduler_In" src="Source" src-port="Stream"/>
+</XDF>

@@ -1,0 +1,93 @@
+import hsi_analysis.Data.*;
+import hsi_analysis.hsi_analysis.*;
+
+
+actor LSU() float LSU_in, float pixels ==> float LSU_out:
+
+	double image_PIXELS[num_PC][rc];
+	double image_END[num_PC][num_Endmembers];
+	double image_END_Transp[num_Endmembers][num_PC];
+	double PRODUCT[num_Endmembers][num_Endmembers];
+	double INVERSE [num_Endmembers][num_Endmembers];
+	double COMPUT_MATRIX[num_Endmembers][num_PC];
+	double ABUNDANCES[num_Endmembers][rc];
+
+ 	bool lsu_done := false;
+
+	int received := 0;
+	int pix_received := 0;
+	
+	float output[num_Endmembers];
+	float array_env[num_Endmembers];
+	int token_sent := 0;
+	
+	float array_rec[num_PC];
+	float array_rec_pixels[num_PC];
+		
+	double tINI_LSU;
+	double tEND_LSU;
+	double tDIFF_LSU;
+	
+	
+	receive_data: action pixels: [token] repeat num_PC ==> 	 
+  		 
+	guard
+		pix_received < (rc)	
+	do
+	 	array_rec_pixels := token;
+	 	foreach int(size= 32)m in 0 .. ((num_PC)-1) do
+			image_PIXELS[m][pix_received] := float_to_double(array_rec_pixels[m]);
+		end
+
+	 	pix_received := pix_received + 1;
+ 	end
+	
+	
+	receive_endmembers: action LSU_in: [token] repeat num_PC ==> 	 
+  		 
+	guard
+		received < int_Endmembers
+	do
+	 	array_rec := token;
+	 	foreach int(size= 32)m in 0 .. ((num_PC)-1) do
+			image_END[m][received] := float_to_double(array_rec[m]);
+		end
+
+	 	received := received + 1;
+	end
+
+ 	LSU_algorithm: action ==> 
+	
+	guard
+		received >= int_Endmembers and pix_received >= rc and lsu_done = false
+	do 
+		println("****Inicio LSU****");
+		tINI_LSU := get_time();
+		transpose(image_END,image_END_Transp, num_PC, num_Endmembers);
+		matrix_mult(image_END_Transp, image_END, PRODUCT, num_Endmembers, num_PC, num_PC, num_Endmembers);
+		get_inverse(PRODUCT, INVERSE, int_Endmembers, int_Endmembers);
+		matrix_mult(INVERSE, image_END_Transp, COMPUT_MATRIX, num_Endmembers, num_Endmembers, num_Endmembers, num_PC);
+		matrix_mult(COMPUT_MATRIX, image_PIXELS, ABUNDANCES, num_Endmembers, num_PC, num_PC, rc);
+		tEND_LSU := get_time();
+		tDIFF_LSU := tEND_LSU - tINI_LSU;
+		println("El tiempo total de LSU es: " + tDIFF_LSU);
+		println("****Fin LSU****");
+		println("****Imagen procesada****");
+		lsu_done := true;
+	end
+	
+	send_abundances: action ==> LSU_out: [output] repeat num_Endmembers
+	
+	guard
+		lsu_done = true and token_sent < rc
+	do
+		
+		foreach int(size= 32)m in 0 .. (num_Endmembers-1) do
+			array_env[m] := double_to_float(ABUNDANCES[m][token_sent]);
+		end
+	
+	 	output := array_env;
+		token_sent := token_sent + 1;
+	end
+
+end

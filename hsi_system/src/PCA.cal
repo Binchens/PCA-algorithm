@@ -1,0 +1,93 @@
+
+import hsi_analysis.Data.*;
+import hsi_analysis.hsi_analysis.*;
+
+
+actor PCA()float PCA_in, bool EOF ==> float PCA_out:
+
+	double image_IN[rc][bands];
+	double image_Prima[rc][bands];
+	double image_Prima_Transp[bands][rc];
+	double image_Mult[bands][bands];
+	
+	bool pca_done := false;
+	
+ 	double averageVector[rc];
+ 	double averageVectorResult;
+ 	double minusVectorResult[rc];
+	double matrix_eigen[bands][bands];
+	double image_PCA[rc][bands];
+	double PCA_out[rc][num_PC];
+	
+	int received := 0;
+	int token_sent := 0;	
+	
+	float array_rec[bands];
+	float output[num_PC];
+	float array_env[num_PC];
+	
+	double tINI;
+	double tEND;
+	double tDIFF;
+	
+	receive_data: action PCA_in: [token] repeat bands, EOF: [endOfFile] ==> 	 
+  		 
+	guard
+		received < (rc)	and endOfFile = false
+	do
+		
+	 	array_rec := token;
+	 	foreach int(size= 32)m in 0 .. ((bands)-1) do
+			image_IN[received][m] := float_to_double(array_rec[m]); 
+		end
+
+	 	received := received + 1;
+		
+		if (received = rc) then
+			println("receive_data: done");
+		end
+	end
+
+ 	PCA_alogrithm: action ==> 
+	
+	guard
+		pca_done = false and received >= rc
+	do 
+	 	println("****Inicio PCA****");
+		tINI := get_time();
+	 	foreach int(size=32) i in 0 .. bands-1 do  
+	 		matrix_get_column(image_IN, averageVector, rc, bands, i);
+	 	    averageVectorResult := mean_vector(averageVector, rc);
+	 		vector_minus_value(averageVector, averageVectorResult,minusVectorResult, rc);
+	 		matrix_set_column(image_Prima, minusVectorResult,rc,bands,i);
+	 	end
+		transpose(image_Prima, image_Prima_Transp, rc, bands); 	
+	 	matrix_mult(image_Prima_Transp, image_Prima, image_Mult, bands, rc, rc, bands);
+		get_eigenvectMatrix(image_Mult, matrix_eigen, bands, bands);
+		matrix_mult(image_IN, matrix_eigen, image_PCA, rc, bands, bands, bands);
+	 	matrix_reduce(image_PCA, PCA_out, rc, bands, rc, num_PC);
+		tEND := get_time();
+		tDIFF := tEND - tINI;
+		println("El tiempo total de PCA es: " + tDIFF);
+		println("****Fin PCA****");
+		//write_txt(image_Prima, 10000, 221, "IMAGE_PRIMA.txt");
+		//write_txt(image_Prima_Transp, 221, 10000, "IMAGE_PRIMA_TRANSP.txt");
+		pca_done := true;
+	end
+
+	
+	send: action ==> PCA_out: [output] repeat num_PC
+	
+	guard
+		pca_done = true and token_sent < rc
+	do
+		
+		foreach int(size= 32)m in 0 .. ((num_PC)-1) do
+			array_env[m] := double_to_float(PCA_out[token_sent][m]);
+		end
+	
+	 	output := array_env;
+		token_sent := token_sent + 1;
+		end
+	
+end

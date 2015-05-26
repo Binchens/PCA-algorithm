@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<net.sf.orcc.df:Unit xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:net.sf.orcc.df="http://orcc.sf.net/model/2011/Df" xmlns:net.sf.orcc.ir="http://orcc.sf.net/model/2011/Ir"
+    fileName="/hsi/src/hsi_analysis/hsi_analysis_cpp.cal" lineNumber="6"
+    name="hsi_analysis.hsi_analysis_cpp">
+  <attributes name="project" stringValue="hsi"/>
+  <constants lineNumber="7" name="NB_TOKEN_TO_SENT">
+    <initialValue xsi:type="net.sf.orcc.ir:ExprInt" value="4096">
+      <type xsi:type="net.sf.orcc.ir:TypeUint" size="13"/>
+    </initialValue>
+    <type xsi:type="net.sf.orcc.ir:TypeUint" size="32"/>
+  </constants>
+  <constants lineNumber="8" name="rows">
+    <initialValue xsi:type="net.sf.orcc.ir:ExprInt" value="0">
+      <type xsi:type="net.sf.orcc.ir:TypeUint" size="1"/>
+    </initialValue>
+    <type xsi:type="net.sf.orcc.ir:TypeUint" size="8"/>
+  </constants>
+  <constants lineNumber="9" name="columns">
+    <initialValue xsi:type="net.sf.orcc.ir:ExprInt" value="0">
+      <type xsi:type="net.sf.orcc.ir:TypeUint" size="1"/>
+    </initialValue>
+    <type xsi:type="net.sf.orcc.ir:TypeUint" size="8"/>
+  </constants>
+  <constants lineNumber="10" name="bands">
+    <initialValue xsi:type="net.sf.orcc.ir:ExprInt" value="0">
+      <type xsi:type="net.sf.orcc.ir:TypeUint" size="1"/>
+    </initialValue>
+    <type xsi:type="net.sf.orcc.ir:TypeUint" size="8"/>
+  </constants>
+  <procedures lineNumber="14" name="SVDTypeConstruct" native="true">
+    <attributes name="native"/>
+    <blocks xsi:type="net.sf.orcc.ir:BlockBasic">
+      <instructions xsi:type="net.sf.orcc.ir:InstReturn"/>
+    </blocks>
+    <parameters>
+      <variable assignable="true" lineNumber="14" name="matrix">
+        <type xsi:type="net.sf.orcc.ir:TypeList">
+          <sizeExpr xsi:type="net.sf.orcc.ir:ExprInt" value="0">
+            <type xsi:type="net.sf.orcc.ir:TypeUint" size="1"/>
+          </sizeExpr>
+          <type xsi:type="net.sf.orcc.ir:TypeList">
+            <sizeExpr xsi:type="net.sf.orcc.ir:ExprInt" value="0">
+              <type xsi:type="net.sf.orcc.ir:TypeUint" size="1"/>
+            </sizeExpr>
+            <type xsi:type="net.sf.orcc.ir:TypeInt" size="8"/>
+          </type>
+        </type>
+      </variable>
+    </parameters>
+    <returnType xsi:type="net.sf.orcc.ir:TypeInt" size="8"/>
+  </procedures>
+  <procedures lineNumber="17" name="get_eigenvectMatrix" native="true">
+    <attributes name="native"/>
+    <blocks xsi:type="net.sf.orcc.ir:BlockBasic">
+      <instructions xsi:type="net.sf.orcc.ir:InstReturn"/>
+    </blocks>
+    <parameters>
+      <variable assignable="true" lineNumber="17" name="matrix">
+        <type xsi:type="net.sf.orcc.ir:TypeList">
+          <sizeExpr xsi:type="net.sf.orcc.ir:ExprInt" value="0">
+            <type xsi:type="net.sf.orcc.ir:TypeUint" size="1"/>
+          </sizeExpr>
+          <type xsi:type="net.sf.orcc.ir:TypeList">
+            <sizeExpr xsi:type="net.sf.orcc.ir:ExprInt" value="0">
+              <type xsi:type="net.sf.orcc.ir:TypeUint" size="1"/>
+            </sizeExpr>
+            <type xsi:type="net.sf.orcc.ir:TypeInt" size="8"/>
+          </type>
+        </type>
+      </variable>
+    </parameters>
+    <returnType xsi:type="net.sf.orcc.ir:TypeVoid"/>
+  </procedures>
+</net.sf.orcc.df:Unit>

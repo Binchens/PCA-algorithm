@@ -1,0 +1,53 @@
+
+import hsi_analysis.Data.*;
+import hsi_analysis.hsi_analysis.*;
+
+
+actor PCA_Secondary_2()
+float PCA_Secondary_in, int Sche_Pointer
+==> float PCA_Secondary_out, int(size = 32) Sec_Pointer:
+	
+	
+	int(size = 32) received := 0;
+	int(size = 32) pointer_out := 0;
+	
+ 	float minusVectorResult[rc];
+ 	float averageVectorResult;
+	float Secondary_out[rc];
+	float vector_received[rc];
+	
+
+	double tINI;
+	double tEND;
+	double tDIFF;
+	
+	receive_scheduler: action
+	PCA_Secondary_in: [Sche_out] repeat bands4core, Sche_Pointer: [pointer_in] 
+	==> PCA_Secondary_out: [Secondary_out]repeat rc, Sec_Pointer: [pointer_out]
+  		 
+	guard
+		received < bands4core
+	do
+		if received = 0 then
+		println("****Inicio Secondary PCA****");
+		tINI := get_time();
+		end
+		println("****Se han recivido: " + received);
+		
+		
+		vector_received := Sche_out;
+		averageVectorResult := mean_vector_float(vector_received, rc);
+		vector_minus_value_float(vector_received, averageVectorResult,minusVectorResult, rc);
+		Secondary_out := minusVectorResult;
+		pointer_out := pointer_in;
+	 	received := received + 1;
+	 	
+	 	if received = (bands4core-1) then
+	 	tEND := get_time();
+		tDIFF := tEND - tINI;
+		println("El tiempo del Secondary PCA es: " + tDIFF);
+		println("****Fin Secondary PCA****");
+		end
+	end
+	
+end

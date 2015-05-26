@@ -1,0 +1,50 @@
+
+import hsi_analysis.Data.*;
+import hsi_analysis.hsi_analysis.*;
+
+
+actor Matrix_Constructor()float PCA_Constructor_in, double Sec_Pointer ==> float PCA_Constructor_out, double Cons_Pointer:
+	
+	int received := 0;
+	
+	float image_Prima[rc][bands];
+	float output[bands];
+	float array_env[bands];
+	
+	double r4c := rc;
+	double token_sent := 0;	
+	double tINI;
+	double tEND;
+	double tDIFF;
+	
+	receive_data: action PCA_Constructor_in: [PCA_Secondary_out] repeat rc, Sec_Pointer: [pointer_in] ==> 	 
+  		 
+	guard
+		received < bands
+	do
+		println("****Inicio Constructor PCA****");
+		tINI := get_time();
+		
+	 	matrix_set_column_float(image_Prima, PCA_Secondary_out,rc,bands,pointer_in);
+	 	received := received + 1;
+		
+		tEND := get_time();
+		tDIFF := tEND - tINI;
+		println("El tiempo Constructor PCA es: " + tDIFF);
+	end
+
+	
+	send: action ==> PCA_Constructor_out: [output] repeat num_PC, Cons_Pointer: [token_sent]
+	
+	guard
+		token_sent < r4c
+	do
+		foreach int(size= 32)m in 0 .. (bands-1) do
+			array_env[m] := image_Prima[double_to_int(token_sent)][m];
+		end
+	
+	 	output := array_env;
+		token_sent := token_sent + 1;
+		end
+	
+end

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<XDF name="hsi_system">
+    <Instance id="PCA">
+        <Class name="PCA_Code_Optimized"/>
+    </Instance>
+    <Instance id="VCA">
+        <Class name="VCA"/>
+    </Instance>
+    <Instance id="LSU">
+        <Class name="LSU"/>
+    </Instance>
+    <Instance id="Source">
+        <Class name="Source"/>
+    </Instance>
+    <Instance id="Display">
+        <Class name="Display"/>
+    </Instance>
+    <Connection dst="VCA" dst-port="VCA_in" src="PCA" src-port="PCA_out"/>
+    <Connection dst="PCA" dst-port="PCA_in" src="Source" src-port="Stream"/>
+    <Connection dst="LSU" dst-port="LSU_in" src="VCA" src-port="VCA_out"/>
+    <Connection dst="LSU" dst-port="pixels" src="PCA" src-port="PCA_out"/>
+    <Connection dst="Display" dst-port="stream" src="LSU" src-port="LSU_out"/>
+    <Connection dst="PCA" dst-port="EOF" src="Source" src-port="EOF"/>
+</XDF>

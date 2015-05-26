@@ -1,0 +1,32 @@
+ENVI
+description = {
+/home/rlazcano/Dropbox/PFG-GDEM/workspace_ultimo/HSI_SYSTEM/compiled/bin/abund}
+samples = 100
+lines   = 100
+bands   = 20
+header offset = 0
+file type = ENVI Standard
+data type = 5
+interleave = bsq
+byte order = 0
+band names = {
+Band 1,
+Band 2,
+Band 3,
+Band 4,
+Band 5,
+Band 6,
+Band 7,
+Band 8,
+Band 9,
+Band 10,
+Band 11,
+Band 12,
+Band 13,
+Band 14,
+Band 15,
+Band 16,
+Band 17,
+Band 18,
+Band 19,
+Band 20}

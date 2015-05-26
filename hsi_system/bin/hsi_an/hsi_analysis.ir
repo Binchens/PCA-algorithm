@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<net.sf.orcc.df:Unit xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:net.sf.orcc.df="http://orcc.sf.net/model/2011/Df" xmlns:net.sf.orcc.ir="http://orcc.sf.net/model/2011/Ir"
+    fileName="/hsi/src/hsi_an/hsi_analysis.cal" lineNumber="6" name="hsi_an.hsi_analysis">
+  <attributes name="project" stringValue="hsi"/>
+  <constants lineNumber="7" name="NB_TOKEN_TO_SENT">
+    <initialValue xsi:type="net.sf.orcc.ir:ExprInt" value="4096">
+      <type xsi:type="net.sf.orcc.ir:TypeUint" size="13"/>
+    </initialValue>
+    <type xsi:type="net.sf.orcc.ir:TypeUint" size="32"/>
+  </constants>
+  <procedures lineNumber="17" name="source_readPixel" native="true">
+    <attributes name="native"/>
+    <blocks xsi:type="net.sf.orcc.ir:BlockBasic">
+      <instructions xsi:type="net.sf.orcc.ir:InstReturn"/>
+    </blocks>
+    <returnType xsi:type="net.sf.orcc.ir:TypeUint" size="8"/>
+  </procedures>
+  <procedures lineNumber="20" name="source_readBand" native="true">
+    <attributes name="native"/>
+    <blocks xsi:type="net.sf.orcc.ir:BlockBasic">
+      <instructions xsi:type="net.sf.orcc.ir:InstReturn"/>
+    </blocks>
+    <returnType xsi:type="net.sf.orcc.ir:TypeUint" size="8"/>
+  </procedures>
+  <procedures lineNumber="30" name="mean" native="true">
+    <attributes name="native"/>
+    <blocks xsi:type="net.sf.orcc.ir:BlockBasic">
+      <instructions xsi:type="net.sf.orcc.ir:InstReturn"/>
+    </blocks>
+    <parameters>
+      <variable assignable="true" lineNumber="30" name="vector">
+        <type xsi:type="net.sf.orcc.ir:TypeUint" size="8"/>
+      </variable>
+    </parameters>
+    <parameters>
+      <variable assignable="true" lineNumber="30" name="long">
+        <type xsi:type="net.sf.orcc.ir:TypeUint" size="8"/>
+      </variable>
+    </parameters>
+    <returnType xsi:type="net.sf.orcc.ir:TypeUint" size="8"/>
+  </procedures>
+  <procedures lineNumber="39" name="vector_mult" native="true">
+    <attributes name="native"/>
+    <blocks xsi:type="net.sf.orcc.ir:BlockBasic">
+      <instructions xsi:type="net.sf.orcc.ir:InstReturn"/>
+    </blocks>
+    <parameters>
+      <variable assignable="true" lineNumber="39" name="vector1">
+        <type xsi:type="net.sf.orcc.ir:TypeUint" size="8"/>
+      </variable>
+    </parameters>
+    <parameters>
+      <variable assignable="true" lineNumber="39" name="vector2">
+        <type xsi:type="net.sf.orcc.ir:TypeUint" size="8"/>
+      </variable>
+    </parameters>
+    <parameters>
+      <variable assignable="true" lineNumber="39" name="positions">
+        <type xsi:type="net.sf.orcc.ir:TypeUint" size="8"/>
+      </variable>
+    </parameters>
+    <returnType xsi:type="net.sf.orcc.ir:TypeUint" size="8"/>
+  </procedures>
+  <procedures lineNumber="42" name="matrix_mult" native="true">
+    <attributes name="native"/>
+    <blocks xsi:type="net.sf.orcc.ir:BlockBasic">
+      <instructions xsi:type="net.sf.orcc.ir:InstReturn"/>
+    </blocks>
+    <parameters>
+      <variable assignable="true" lineNumber="42" name="matrix1">
+        <type xsi:type="net.sf.orcc.ir:TypeUint" size="8"/>
+      </variable>
+    </parameters>
+    <parameters>
+      <variable assignable="true" lineNumber="42" name="rows1">
+        <type xsi:type="net.sf.orcc.ir:TypeUint" size="8"/>
+      </variable>
+    </parameters>
+    <parameters>
+      <variable assignable="true" lineNumber="42" name="columns1">
+        <type xsi:type="net.sf.orcc.ir:TypeUint" size="8"/>
+      </variable>
+    </parameters>
+    <parameters>
+      <variable assignable="true" lineNumber="42" name="matrix2">
+        <type xsi:type="net.sf.orcc.ir:TypeUint" size="8"/>
+      </variable>
+    </parameters>
+    <parameters>
+      <variable assignable="true" lineNumber="42" name="rows2">
+        <type xsi:type="net.sf.orcc.ir:TypeUint" size="8"/>
+      </variable>
+    </parameters>
+    <parameters>
+      <variable assignable="true" lineNumber="42" name="columns2">
+        <type xsi:type="net.sf.orcc.ir:TypeUint" size="8"/>
+      </variable>
+    </parameters>
+    <returnType xsi:type="net.sf.orcc.ir:TypeUint" size="8"/>
+  </procedures>
+  <procedures lineNumber="45" name="get_diagonal" native="true">
+    <attributes name="native"/>
+    <blocks xsi:type="net.sf.orcc.ir:BlockBasic">
+      <instructions xsi:type="net.sf.orcc.ir:InstReturn"/>
+    </blocks>
+    <parameters>
+      <variable assignable="true" lineNumber="45" name="matrix">
+        <type xsi:type="net.sf.orcc.ir:TypeUint" size="8"/>
+      </variable>
+    </parameters>
+    <parameters>
+      <variable assignable="true" lineNumber="45" name="rows">
+        <type xsi:type="net.sf.orcc.ir:TypeUint" size="8"/>
+      </variable>
+    </parameters>
+    <parameters>
+      <variable assignable="true" lineNumber="45" name="columns">
+        <type xsi:type="net.sf.orcc.ir:TypeUint" size="8"/>
+      </variable>
+    </parameters>
+    <returnType xsi:type="net.sf.orcc.ir:TypeUint" size="8"/>
+  </procedures>
+  <procedures lineNumber="11" name="source_init" native="true">
+    <attributes name="native"/>
+    <blocks xsi:type="net.sf.orcc.ir:BlockBasic">
+      <instructions xsi:type="net.sf.orcc.ir:InstReturn"/>
+    </blocks>
+    <returnType xsi:type="net.sf.orcc.ir:TypeVoid"/>
+  </procedures>
+  <procedures lineNumber="14" name="source_readConfig" native="true">
+    <attributes name="native"/>
+    <blocks xsi:type="net.sf.orcc.ir:BlockBasic">
+      <instructions xsi:type="net.sf.orcc.ir:InstReturn"/>
+    </blocks>
+    <parameters>
+      <variable assignable="true" lineNumber="14" name="outTable">
+        <type xsi:type="net.sf.orcc.ir:TypeList">
+          <sizeExpr xsi:type="net.sf.orcc.ir:ExprInt" value="4096">
+            <type xsi:type="net.sf.orcc.ir:TypeUint" size="13"/>
+          </sizeExpr>
+          <type xsi:type="net.sf.orcc.ir:TypeUint" size="8"/>
+        </type>
+      </variable>
+    </parameters>
+    <parameters>
+      <variable assignable="true" lineNumber="14" name="nbTokenToRead">
+        <type xsi:type="net.sf.orcc.ir:TypeUint" size="32"/>
+      </variable>
+    </parameters>
+    <returnType xsi:type="net.sf.orcc.ir:TypeVoid"/>
+  </procedures>
+  <procedures lineNumber="23" name="source_readAll" native="true">
+    <attributes name="native"/>
+    <blocks xsi:type="net.sf.orcc.ir:BlockBasic">
+      <instructions xsi:type="net.sf.orcc.ir:InstReturn"/>
+    </blocks>
+    <returnType xsi:type="net.sf.orcc.ir:TypeVoid"/>
+  </procedures>
+  <procedures lineNumber="26" name="source_exit" native="true">
+    <attributes name="native"/>
+    <blocks xsi:type="net.sf.orcc.ir:BlockBasic">
+      <instructions xsi:type="net.sf.orcc.ir:InstReturn"/>
+    </blocks>
+    <parameters>
+      <variable assignable="true" lineNumber="26" name="exitCode">
+        <type xsi:type="net.sf.orcc.ir:TypeInt" size="32"/>
+      </variable>
+    </parameters>
+    <returnType xsi:type="net.sf.orcc.ir:TypeVoid"/>
+  </procedures>
+  <procedures lineNumber="33" name="minus_vector" native="true">
+    <attributes name="native"/>
+    <blocks xsi:type="net.sf.orcc.ir:BlockBasic">
+      <instructions xsi:type="net.sf.orcc.ir:InstReturn"/>
+    </blocks>
+    <parameters>
+      <variable assignable="true" lineNumber="33" name="vector">
+        <type xsi:type="net.sf.orcc.ir:TypeUint" size="8"/>
+      </variable>
+    </parameters>
+    <parameters>
+      <variable assignable="true" lineNumber="33" name="positions">
+        <type xsi:type="net.sf.orcc.ir:TypeUint" size="8"/>
+      </variable>
+    </parameters>
+    <returnType xsi:type="net.sf.orcc.ir:TypeVoid"/>
+  </procedures>
+  <procedures lineNumber="36" name="traspose" native="true">
+    <attributes name="native"/>
+    <blocks xsi:type="net.sf.orcc.ir:BlockBasic">
+      <instructions xsi:type="net.sf.orcc.ir:InstReturn"/>
+    </blocks>
+    <parameters>
+      <variable assignable="true" lineNumber="36" name="matrix">
+        <type xsi:type="net.sf.orcc.ir:TypeUint" size="8"/>
+      </variable>
+    </parameters>
+    <parameters>
+      <variable assignable="true" lineNumber="36" name="rows">
+        <type xsi:type="net.sf.orcc.ir:TypeUint" size="8"/>
+      </variable>
+    </parameters>
+    <parameters>
+      <variable assignable="true" lineNumber="36" name="columns">
+        <type xsi:type="net.sf.orcc.ir:TypeUint" size="8"/>
+      </variable>
+    </parameters>
+    <returnType xsi:type="net.sf.orcc.ir:TypeVoid"/>
+  </procedures>
+</net.sf.orcc.df:Unit>

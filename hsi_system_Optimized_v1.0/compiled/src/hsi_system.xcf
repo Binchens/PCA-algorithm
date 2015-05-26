@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+	<Partitioning>
+		<Partition id="1">
+			<Instance id="PCA"/>
+			<Instance id="VCA"/>
+			<Instance id="LSU"/>
+			<Instance id="Source"/>
+			<Instance id="Display"/>
+		</Partition>
+		<!-- Unmapped id="PCA" -->
+		<!-- Unmapped id="VCA" -->
+		<!-- Unmapped id="LSU" -->
+		<!-- Unmapped id="Source" -->
+		<!-- Unmapped id="Display" -->
+	</Partitioning>
+	
+	<!-- Other useful informations related to any element of the instanciated model can be printed here -->
+</Configuration>

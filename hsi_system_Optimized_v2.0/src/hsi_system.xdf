@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<XDF name="hsi_system">
+    <Instance id="VCA">
+        <Class name="VCA"/>
+    </Instance>
+    <Instance id="LSU">
+        <Class name="LSU"/>
+    </Instance>
+    <Instance id="Source">
+        <Class name="Source"/>
+    </Instance>
+    <Instance id="Display">
+        <Class name="Display"/>
+    </Instance>
+    <Instance id="MUX_PCA_0">
+        <Class name="PCA_Code_Optimized"/>
+    </Instance>
+    <Instance id="MUX_PCA_1">
+        <Class name="PCA_Code_Optimized"/>
+    </Instance>
+    <Instance id="MUX_PCA_2">
+        <Class name="PCA_Code_Optimized"/>
+    </Instance>
+    <Instance id="MUX_PCA_3">
+        <Class name="PCA_Code_Optimized"/>
+    </Instance>
+    <Instance id="Constructor_PCA">
+        <Class name="Matrix_Constructor"/>
+    </Instance>
+    <Instance id="Secondary_PCA_0">
+        <Class name="PCA_Secondary"/>
+    </Instance>
+    <Instance id="Secondary_PCA_1">
+        <Class name="PCA_Secondary"/>
+    </Instance>
+    <Instance id="Secondary_PCA_2">
+        <Class name="PCA_Secondary"/>
+    </Instance>
+    <Instance id="Secondary_PCA_3">
+        <Class name="PCA_Secondary"/>
+    </Instance>
+    <Instance id="Scheduler_PCA">
+        <Class name="PCA_Scheduler"/>
+    </Instance>
+    <Connection dst="LSU" dst-port="LSU_in" src="VCA" src-port="VCA_out"/>
+    <Connection dst="Display" dst-port="stream" src="LSU" src-port="LSU_out"/>
+</XDF>

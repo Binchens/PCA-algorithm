@@ -1,0 +1,151 @@
+
+import hsi_analysis.Data.*;
+import hsi_analysis.hsi_analysis.*;
+
+actor VCA() float VCA_in ==> float VCA_out:
+
+	double image_INI[rc][num_PC];
+	double image_INI_Transp[num_PC][rc];
+	
+ 	double averageVector[rc];
+ 	double averageVectorResult[num_PC];
+ 	double minusVectorResult[rc];
+	double image_Prima[rc][num_PC];
+	double image_Prima_Transp[num_PC][rc];
+	double image_SVD_Aux[num_PC][num_PC];
+	double image_SVD_IN[num_PC][num_PC];
+	double SVD_U[num_PC][num_PC];
+	double matrix_Ud[num_PC][num_Endmembers - 1];
+	double matrix_Ud_Transp[num_Endmembers - 1][num_PC];
+	double matrix_xp[num_Endmembers - 1][rc];
+	
+	double matrix_x_Transp[rc][num_Endmembers - 1];
+	double matrix_Rp_aux[num_PC][rc];
+	double matrix_Rp[num_PC][rc];
+	double projection[rc][num_Endmembers];
+	int(size=32) d;
+	double c;
+	
+	double endmemberCollection[num_Endmembers][num_PC];
+	double A[num_Endmembers][num_Endmembers];
+	double w[num_Endmembers];
+	double matrix_p_inverse[num_Endmembers][num_Endmembers];
+	double A_mult[num_Endmembers][num_Endmembers];
+	double F_aux[num_Endmembers];
+	double F[num_Endmembers];
+	double F_divided[num_Endmembers];
+	double sum_aux;
+	double sqrt_value;
+	double vTransp[rc];
+	int(size = 32)  index[num_Endmembers];
+
+	int received := 0;
+	
+ 	bool vca_done := false;
+	
+	
+	float output[num_PC];
+	float array_env[num_PC];
+	int token_sent := 0;	
+	
+	float array_rec[num_PC];
+	
+	double tINI_VCA;
+	double tEND_VCA;
+	double tDIFF_VCA;
+	
+	receive_data: action VCA_in: [token] repeat num_PC ==> 	 
+  		 
+	guard
+		received < (rc)	
+	do
+	 	array_rec := token;
+	 	foreach int(size= 32)m in 0 .. ((num_PC)-1) do
+			image_INI[received][m] := float_to_double(array_rec[m]);
+		end
+
+	 	received := received + 1;
+		
+	end
+
+ 	VCA_algorithm: action ==> 
+	
+	guard
+		received >= (rc) and vca_done = false
+	do 
+		println("****Inicio VCA****");
+		tINI_VCA := get_time();
+		transpose(image_INI, image_INI_Transp, rc, num_PC);	
+		foreach int(size=32) i in 0 .. num_PC-1 do  
+			matrix_get_row(image_INI_Transp,averageVector,num_PC,rc,i);
+			averageVectorResult[i] := mean_vector(averageVector, rc);
+			vector_minus_value(averageVector, averageVectorResult[i],minusVectorResult, rc);
+			matrix_set_row(image_Prima_Transp,minusVectorResult,num_PC,rc,i);
+		end
+		transpose(image_Prima_Transp, image_Prima, num_PC, rc);
+		matrix_mult(image_Prima_Transp, image_Prima, image_SVD_Aux, num_PC, rc, rc, num_PC);
+		matrix_scale(image_SVD_Aux, image_SVD_IN, num_PC, num_PC, num_PC);
+		get_eigenvectMatrix(image_SVD_IN, SVD_U, num_PC, num_PC);
+		matrix_reduce(SVD_U, matrix_Ud, num_PC, num_PC, num_PC, num_Endmembers - 1);
+		transpose(matrix_Ud, matrix_Ud_Transp, num_PC, num_Endmembers - 1);
+		matrix_mult(matrix_Ud_Transp, image_Prima_Transp, matrix_xp, num_Endmembers - 1, num_PC, num_PC, rc);
+		matrix_mult(matrix_Ud, matrix_xp, matrix_Rp_aux, num_PC, num_Endmembers - 1, num_Endmembers - 1, rc);
+	 	foreach int (size=32) i in 0 .. num_PC-1 do
+	 		foreach int(size=32) j in 0 .. (rc)-1 do
+	 			matrix_Rp[i][j] := matrix_Rp_aux[i][j] + averageVectorResult[i]; 
+	 		end
+	 	end
+	 	c := maxSqrtSum(matrix_xp, num_Endmembers-1, rc);
+	 	transpose(matrix_xp, matrix_x_Transp, num_Endmembers-1, rc);
+		matrix_extend(matrix_x_Transp, projection, rc, num_Endmembers-1, rc, num_Endmembers);
+	 	matrix_fill_column(projection, rc, num_Endmembers, num_Endmembers-1, c);
+		d := int_Endmembers - 1;
+		A[d][0] := 1;
+		foreach int (size=32) i in 0 .. num_Endmembers-1 do
+			random_vector(w,num_Endmembers);
+	 		get_pinverse(A, matrix_p_inverse, int_Endmembers, int_Endmembers);
+	 		matrix_mult(A, matrix_p_inverse, A_mult, num_Endmembers, num_Endmembers, num_Endmembers, num_Endmembers);
+	 		matrix_mult_vector(A_mult, w, F_aux, num_Endmembers, num_Endmembers, num_Endmembers);
+	 		vector_minus_vector(w, F_aux, F, int_Endmembers);
+	 		sum_aux := 0;
+	 		foreach int (size=32) j in 0 .. num_Endmembers-1 do
+	 			sum_aux := sum_aux + elev(F[j], 2);
+	 		end
+	 		sqrt_value := sq_root(sum_aux);
+	 		vector_scale(F, F_divided, sqrt_value, int_Endmembers);
+	 		matrix_mult_vector(projection, F_divided, vTransp, rc, num_Endmembers, num_Endmembers);
+	 		index[i] := getIndexMax(vTransp, rc);
+		//	println("Indice: " + index[i]);
+	 		foreach int (size=32) k in 0 .. num_Endmembers do
+	 			A[k][i] := projection[index[i]][k];
+	 		end
+	 		foreach int (size=32) z in 0 .. num_PC-1 do
+	 			endmemberCollection[i][z] := matrix_Rp[z][index[i]];
+	 		end
+		end
+		
+		tEND_VCA := get_time();
+		tDIFF_VCA := tEND_VCA - tINI_VCA;
+		println("El tiempo total de VCA es: " + tDIFF_VCA);
+		println("****Fin VCA****");
+	 
+		vca_done := true;
+	end
+	
+	send: action ==> VCA_out: [output] repeat num_PC
+	
+	guard
+		vca_done = true and token_sent < int_Endmembers
+	do
+		
+		foreach int(size= 32)m in 0 .. (num_PC-1) do
+			array_env[m] := double_to_float(endmemberCollection[token_sent][m]);
+		end
+	
+	 	output := array_env;
+		token_sent := token_sent + 1;
+	end
+end
+
+
+

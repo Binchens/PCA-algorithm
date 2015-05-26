@@ -1,0 +1,187 @@
+
+import hsi_analysis.Data.*;
+import hsi_analysis.hsi_analysis.*;
+
+
+actor Matrix_Constructor()
+float Constructor_in0, int(size = 32) Sec_Pointer0, float Constructor_in1, int(size = 32) Sec_Pointer1, float Constructor_in2, int(size = 32) Sec_Pointer2, float Constructor_in3, int(size = 32) Sec_Pointer3, float PCA_in, bool EOF
+==> float PCA_Constructor_out:
+	
+	int(size = 32) received := 0;
+	int(size = 32) received0 := 0;
+	int(size = 32) received1 := 0;
+	int(size = 32) received2 := 0;
+	int(size = 32) received3 := 0;
+	int(size = 32) sent := 0;
+	int(size = 32) point := 0;
+	
+	double image_IN[rc][bands];
+	double image_Mult[bands][bands];
+	double matrix_eigen[bands][bands];
+	double image_Prima[rc][bands];
+	double image_Prima_Transp[bands][rc];
+	double PCA_eigen[bands][num_PC];
+	double PCA_out[rc][num_PC];
+	
+	bool pca_done := false;
+
+	float array_rec[rc];
+	float array[bands];
+	float output[num_PC];
+	float array_env[num_PC];
+	
+	double element_received;
+	//double r4c := rc;
+	double tINI;
+	double tEND;
+	double tDIFF;
+	
+	
+// It receives minusVectorResult from core 0 and constructs image_Prima and image_Prima_Transp to continue with the process 
+	receive_vector0: action
+	Constructor_in0: [Secondary_out0] repeat rc, Sec_Pointer0: [pointer_in0]
+	==>
+  	
+	guard
+		received0 < bands4core
+	do
+		if received0 = 0 then
+			println("****Inicio Constructor PCA****");
+			tINI := get_time();
+		end
+		
+		point := pointer_in0;
+		array_rec := Secondary_out0;
+		foreach int(size= 32)m in 0 .. (rc-1) do
+			element_received := float_to_double(array_rec[m]);
+			// As the same time as it's received one vector transform to doubles and construct image_Prima & image_Prima_Transp
+			image_Prima[m][point] := element_received; 
+			image_Prima_Transp[point][m] := element_received; 
+		end
+	 	received0 := received0 + 1;
+		
+	end
+	
+	
+// It receives minusVectorResult from core 1 and constructs image_Prima and image_Prima_Transp to continue with the process 
+	receive_vector1: action
+	Constructor_in1: [PCA_Secondary_out1] repeat rc, Sec_Pointer1: [pointer_in1]
+	==>
+  	
+	guard
+		received1 < bands4core and received0 >= bands4core
+	do
+		point := pointer_in1;
+		array_rec := PCA_Secondary_out1;
+		foreach int(size= 32)j in 0 .. (rc-1) do
+			element_received := float_to_double(array_rec[j]);
+			// As the same time as it's received one vector transform to doubles and construct image_Prima & image_Prima_Transp
+			image_Prima[j][point] := element_received; 
+			image_Prima_Transp[point][j] := element_received; 
+		end
+	 	received1 := received1 + 1;
+		
+	end
+	
+	
+// It receives minusVectorResult from core 2 and constructs image_Prima and image_Prima_Transp to continue with the process 
+	receive_vector2: action
+	Constructor_in2: [PCA_Secondary_out2] repeat rc, Sec_Pointer2: [pointer_in2]
+	==>
+  	
+	guard
+		received2 < bands4core and received1 >= bands4core
+	do
+		point := pointer_in2;
+		array_rec := PCA_Secondary_out2;
+		foreach int(size= 32)k in 0 .. (rc-1) do
+			element_received := float_to_double(array_rec[k]);
+			// As the same time as it's received one vector transform to doubles and construct image_Prima & image_Prima_Transp
+			image_Prima[k][point] := element_received; 
+			image_Prima_Transp[point][k] := element_received; 
+		end
+	 	received2 := received2 + 1;
+		
+	end
+	
+	
+// It receives minusVectorResult from core 3 and constructs image_Prima and image_Prima_Transp to continue with the process 
+	receive_vector3: action
+	Constructor_in3: [PCA_Secondary_out3] repeat rc, Sec_Pointer3: [pointer_in3]
+	==>
+  	
+	guard
+		received3 < bands4core and received2 >= bands4core
+	do
+		point := pointer_in3;
+		array_rec := PCA_Secondary_out3;
+		foreach int(size= 32)n in 0 .. (rc-1) do
+			element_received := float_to_double(array_rec[n]);
+			// As the same time as it's received one vector transform to doubles and construct image_Prima & image_Prima_Transp
+			image_Prima[n][point] := element_received; 
+			image_Prima_Transp[point][n] := element_received; 
+		end
+	 	received3 := received3 + 1;
+		
+	end
+	
+	
+	
+	
+//***************************************************
+	receive_data: action
+	PCA_in: [token] repeat bands, EOF: [endOfFile]
+	==> 	 
+  		 
+	guard
+		received < rc and received3 >= bands4core
+	do
+		if endOfFile = true then
+			println("****No hay puto fichero de mis cojones****");
+		else
+	 		array := token;
+	 		foreach int(size= 32)t in 0 .. ((bands)-1) do
+				image_IN[received][t] := float_to_double(array[t]); 
+			end
+		end
+		received := received + 1;
+		
+	end
+
+// PCA Algorithm
+	PCA_algorithm: action
+	==> 
+	
+	guard
+		pca_done = false and received >= rc
+	do 
+	 	matrix_mult(image_Prima_Transp, image_Prima, image_Mult, bands, rc, rc, bands);
+		get_eigenvectMatrix(image_Mult, matrix_eigen, bands, bands);
+		matrix_reduce(matrix_eigen, PCA_eigen, bands, bands, bands, num_PC);
+		matrix_mult(image_IN, PCA_eigen, PCA_out, rc, bands, bands, num_PC);
+		
+		pca_done := true;
+	end
+
+// Send PCA
+	send: action
+	==> PCA_Constructor_out: [output] repeat num_PC
+	
+	guard
+		sent < rc and pca_done = true
+	do
+		
+		foreach int(size= 32)s in 0 .. ((num_PC)-1) do
+			array_env[s] := double_to_float(PCA_out[sent][s]);
+		end
+	
+	 	output := array_env;
+		sent := sent + 1;
+		
+		if sent = rc then
+			tEND := get_time();
+			tDIFF := tEND - tINI;
+			println("El tiempo Constructor PCA es: " + tDIFF);
+		end
+	end
+end

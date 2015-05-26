@@ -1,0 +1,118 @@
+
+import hsi_analysis.Data.*;
+import hsi_analysis.hsi_analysis.*;
+
+
+actor PCA_Scheduler()
+float Scheduler_In, bool EOF
+==> float Secondary_Out0, int Sche_Pointer0, float Secondary_Out1, int Sche_Pointer1, float Secondary_Out2, int Sche_Pointer2, float Secondary_Out3, int Sche_Pointer3:
+	
+	
+	int(size = 32) pointer0 := 0;
+	int(size = 32) pointer1 := 0;
+	int(size = 32) pointer2 := 0;
+	int(size = 32) pointer3 := 0;
+	int(size = 32) received := 0;
+	int(size = 32) token_sent := 0;
+	
+	float image_IN[rc][bands];
+	float array_rec[bands];
+	float averageVector[rc];
+	
+	float Sche_out0[rc];
+	float Sche_out1[rc];
+	float Sche_out2[rc];
+	float Sche_out3[rc];
+	
+	double tINI;
+	double tEND;
+	double tDIFF;
+	
+	
+// Scheduler's input receive and store the information for all bands per each pixel
+	receive_data_source: action Scheduler_In: [token] repeat bands, EOF: [endOfFile] ==>
+  	
+  	
+	guard
+		received < rc 
+	do
+		if endOfFile = true then
+			println("****No hay puto fichero de mis cojones****");
+		else
+		
+	 		array_rec := token;
+	 		foreach int(size= 32)m in 0 .. ((bands)-1) do
+				image_IN[received][m] := array_rec[m]; 
+			end
+	 		//matrix_set_row_float(image_IN, array_rec,rc,bands,received);
+	 		received := received + 1;
+	 	end
+	end
+
+
+// Scheduler makes data package for the cores and send it to all of them
+	Send_Sche0: action ==> Secondary_Out0: [Sche_out0] repeat rc, Sche_Pointer0: [pointer0]
+	
+	guard
+		token_sent < band4core1 and received >= rc
+	do
+		if token_sent = 0 then
+			println("****Inicio Scheduler PCA****");
+			tINI := get_time();
+		end
+	 	
+	 	matrix_get_column_float(image_IN, averageVector, rc, bands, token_sent);
+	 	Sche_out0 := averageVector;
+	 	pointer0 := token_sent;
+	 	token_sent := token_sent + 1;
+		
+	end
+	
+	
+	Send_Sche1: action ==> Secondary_Out1: [Sche_out1] repeat rc, Sche_Pointer1: [pointer1]
+	
+	guard
+		token_sent < band4core2 and token_sent >= band4core1
+	do
+		
+	 	matrix_get_column_float(image_IN, averageVector, rc, bands, token_sent);
+	 	Sche_out1 := averageVector;
+	 	pointer1 := token_sent;
+	 	token_sent := token_sent + 1;
+	 	
+	end
+	
+	
+	Send_Sche2: action ==> Secondary_Out2: [Sche_out2] repeat rc, Sche_Pointer2: [pointer2]
+	
+	guard
+		token_sent < band4core3 and token_sent >= band4core2
+	do
+		
+	 	matrix_get_column_float(image_IN, averageVector, rc, bands, token_sent);
+	 	Sche_out2 := averageVector;
+	 	pointer2 := token_sent;
+	 	token_sent := token_sent + 1;
+	 			
+	end
+	
+	
+	Send_Sche3: action ==> Secondary_Out3: [Sche_out3] repeat rc, Sche_Pointer3: [pointer3]
+	
+	guard
+		token_sent < bands and token_sent >= band4core3
+	do
+		
+	 	matrix_get_column_float(image_IN, averageVector, rc, bands, token_sent);
+	 	Sche_out3 := averageVector;
+	 	pointer3 := token_sent;
+	 	token_sent := token_sent + 1;
+		
+		if token_sent = bands then
+			tEND := get_time();
+			tDIFF := tEND - tINI;
+			println("El tiempo Scheduler PCA es: " + tDIFF);
+			println("****Fin Scheduler PCA****");
+		end
+	end
+end

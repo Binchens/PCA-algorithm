@@ -1,0 +1,17 @@
+Name, Package, Actors, Connections, SDF, CSDF, QSDF, KPN, DPN
+hsi_system, , 5, 6, 0, 0, 0, 0, 0
+
+Name, Incoming, Outgoing, Inputs, Outputs, Actions, FSM, MoC
+PCA, 2, 2, 2, 1, 3, false, 
+VCA, 1, 1, 1, 1, 3, false, 
+LSU, 2, 1, 2, 1, 4, false, 
+Source, 0, 2, 0, 2, 5, true, 
+Display, 1, 0, 1, 0, 1, false, 
+
+Source, SrcPort, Target, TgtPort, Size
+PCA, PCA_out, VCA, VCA_in, 
+Source, Stream, PCA, PCA_in, 
+VCA, VCA_out, LSU, LSU_in, 
+PCA, PCA_out, LSU, pixels, 
+LSU, LSU_out, Display, stream, 
+Source, EOF, PCA, EOF, 

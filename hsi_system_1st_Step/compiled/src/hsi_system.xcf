@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+	<Partitioning>
+		<Partition id="1">
+			<Instance id="Secondary_PCA_3"/>
+			<Instance id="Constructor_PCA"/>
+		</Partition>
+		<Partition id="2">
+			<Instance id="Source"/>
+			<Instance id="Display"/>
+			<Instance id="Secondary_PCA_0"/>
+			<Instance id="Scheduler_PCA"/>
+		</Partition>
+		<Partition id="3">
+			<Instance id="LSU"/>
+			<Instance id="Secondary_PCA_1"/>
+		</Partition>
+		<Partition id="4">
+			<Instance id="VCA"/>
+			<Instance id="Secondary_PCA_2"/>
+		</Partition>
+	</Partitioning>
+	
+	<!-- Other useful informations related to any element of the instanciated model can be printed here -->
+</Configuration>

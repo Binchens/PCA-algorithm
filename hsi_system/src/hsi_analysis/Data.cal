@@ -1,0 +1,20 @@
+package hsi_analysis;
+ 
+ 
+unit Data:
+ 
+ 
+int(size=32) rows = 100;
+int(size=32) columns = 100;
+int(size=32) bands = 221;
+int(size=32) nbits = 16;
+int(size=32) nformat = 0;  //0 BSQ, 1 BIP, 2 BIL
+ 
+int(size=32) num_PC = 100;
+double num_Endmembers = 20;
+ 
+int(size=32) rc = rows*columns;
+int(size=32) int_Endmembers = 20;
+ 
+ 
+end
